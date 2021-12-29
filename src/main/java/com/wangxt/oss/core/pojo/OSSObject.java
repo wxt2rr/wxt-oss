@@ -7,6 +7,9 @@ import java.io.InputStream;
 
 @Getter
 @Setter
+/**
+ * get object result
+ */
 public class OSSObject {
 
     private InputStream inputStream;
