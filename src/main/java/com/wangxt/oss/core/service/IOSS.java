@@ -1,6 +1,7 @@
 package com.wangxt.oss.core.service;
 
 import com.wangxt.oss.core.config.IOSSConfig;
+import com.wangxt.oss.core.pojo.OSSObject;
 import com.wangxt.oss.core.pojo.ObjectMetadata;
 import com.wangxt.oss.core.pojo.PutObjectResult;
 
@@ -73,4 +74,35 @@ public interface IOSS {
      * @return PutObjectResult
      */
     PutObjectResult putFile(String finalKey, byte[] byts, ObjectMetadata meta);
+
+    /**
+     * 获取文件
+     * @param finalKey oss文件路径
+     * @return 文件对象
+     */
+    OSSObject getFile(String finalKey);
+
+    /**
+     * 获取文件
+     * @param finalKey oss文件路径
+     * @param rangeFrom 文件流起始位置
+     * @param rangeTo 文件流终止位置
+     * @return 文件对象
+     */
+    OSSObject getFile(String finalKey, long rangeFrom, long rangeTo);
+
+    /**
+     * 获取文件
+     * @param finalKey oss文件路径
+     * @param style 文件格式
+     * @return 文件对象
+     */
+    OSSObject getFile(String finalKey, String style);
+
+    /**
+     * 获取文件元数据
+     * @param finalKey oss文件路径
+     * @return 文件对象元数据
+     */
+    ObjectMetadata getObjectMetadata(String finalKey);
 }

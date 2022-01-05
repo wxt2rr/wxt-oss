@@ -1,6 +1,7 @@
 package com.wangxt.oss.core.service.impl;
 
 import com.wangxt.oss.core.config.IOSSConfig;
+import com.wangxt.oss.core.pojo.OSSObject;
 import com.wangxt.oss.core.pojo.ObjectMetadata;
 import com.wangxt.oss.core.pojo.PutObjectResult;
 import com.wangxt.oss.core.service.IOSS;
@@ -44,6 +45,26 @@ public class Minio implements IOSS {
 
     @Override
     public PutObjectResult putFile(String finalKey, byte[] byts, ObjectMetadata meta) {
+        return null;
+    }
+
+    @Override
+    public OSSObject getFile(String finalKey) {
+        return null;
+    }
+
+    @Override
+    public OSSObject getFile(String finalKey, long rangeFrom, long rangeTo) {
+        return null;
+    }
+
+    @Override
+    public OSSObject getFile(String finalKey, String style) {
+        return null;
+    }
+
+    @Override
+    public ObjectMetadata getObjectMetadata(String finalKey) {
         return null;
     }
 }
