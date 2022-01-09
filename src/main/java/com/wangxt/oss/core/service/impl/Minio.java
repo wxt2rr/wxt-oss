@@ -1,6 +1,7 @@
 package com.wangxt.oss.core.service.impl;
 
 import com.wangxt.oss.core.config.IOSSConfig;
+import com.wangxt.oss.core.pojo.CopyObjectResult;
 import com.wangxt.oss.core.pojo.OSSObject;
 import com.wangxt.oss.core.pojo.ObjectMetadata;
 import com.wangxt.oss.core.pojo.PutObjectResult;
@@ -65,6 +66,31 @@ public class Minio implements IOSS {
 
     @Override
     public ObjectMetadata getObjectMetadata(String finalKey) {
+        return null;
+    }
+
+    @Override
+    public CopyObjectResult copyFile(String fromKey, String toKey) {
+        return null;
+    }
+
+    @Override
+    public CopyObjectResult copyFileNoCatch(String fromKey, String toKey) throws Exception {
+        return null;
+    }
+
+    @Override
+    public CopyObjectResult copyFile2Bucket(String fromKey, IOSS targetBucket, String toKey) {
+        return null;
+    }
+
+    @Override
+    public CopyObjectResult copyFile(String fromKey, String toKey, ObjectMetadata targetFileObjectMetadata) {
+        return null;
+    }
+
+    @Override
+    public CopyObjectResult copyFile2Bucket(String fromKey, IOSS targetBucket, String toKey, ObjectMetadata targetFileObjectMetadata) {
         return null;
     }
 }

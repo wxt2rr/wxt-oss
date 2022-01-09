@@ -1,6 +1,7 @@
 package com.wangxt.oss.core.service;
 
 import com.wangxt.oss.core.config.IOSSConfig;
+import com.wangxt.oss.core.pojo.CopyObjectResult;
 import com.wangxt.oss.core.pojo.OSSObject;
 import com.wangxt.oss.core.pojo.ObjectMetadata;
 import com.wangxt.oss.core.pojo.PutObjectResult;
@@ -105,4 +106,48 @@ public interface IOSS {
      * @return 文件对象元数据
      */
     ObjectMetadata getObjectMetadata(String finalKey);
+
+    /**
+     * 复制文件
+     * @param fromKey 源文件路径
+     * @param toKey 目标文件路径
+     * @return 复制操作结果
+     */
+    CopyObjectResult copyFile(String fromKey, String toKey);
+
+    /**
+     * 复制文件
+     * @param fromKey 源文件路径
+     * @param toKey 目标文件路径
+     * @return 复制操作结果
+     */
+    CopyObjectResult copyFileNoCatch(String fromKey, String toKey) throws Exception;
+
+    /**
+     * 复制文件到其它桶
+     * @param fromKey 源文件路径
+     * @param targetBucket 目标桶名称
+     * @param toKey 目标文件路径
+     * @return 复制操作结果
+     */
+    CopyObjectResult copyFile2Bucket(String fromKey, IOSS targetBucket, String toKey);
+
+    /**
+     * 复制文件并指定目标文件元数据信息
+     * @param fromKey 源文件路径
+     * @param toKey 目标文件路径
+     * @param targetFileObjectMetadata 目标文件元数据信息
+     * @return 复制操作结果
+     */
+    CopyObjectResult copyFile(String fromKey, String toKey, ObjectMetadata targetFileObjectMetadata);
+
+    /**
+     * 复制文件到其它桶，并指定目标文件元数据信息
+     * @param fromKey 源文件路径
+     * @param targetBucket 目标桶名称
+     * @param toKey 目标文件路径
+     * @param targetFileObjectMetadata 目标文件元数据信息
+     * @return 复制操作结果
+     */
+    CopyObjectResult copyFile2Bucket(String fromKey, IOSS targetBucket, String toKey, ObjectMetadata targetFileObjectMetadata);
 }
