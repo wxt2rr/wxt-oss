@@ -16,6 +16,10 @@ public class AliOss implements IOSS {
         return null;
     }
 
+    public AliOss(IOSSConfig config){
+
+    }
+
     @Override
     public PutObjectResult putFile(String finalKey, InputStream is) {
         return null;

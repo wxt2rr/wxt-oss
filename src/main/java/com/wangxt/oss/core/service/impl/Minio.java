@@ -19,6 +19,10 @@ public class Minio implements IOSS {
         return null;
     }
 
+    public Minio(IOSSConfig config){
+        
+    }
+
     @Override
     public PutObjectResult putFile(String finalKey, InputStream is) {
         return null;
