@@ -7,6 +7,7 @@ import com.wangxt.oss.core.pojo.ObjectMetadata;
 import com.wangxt.oss.core.pojo.PutObjectResult;
 
 import java.io.InputStream;
+import java.util.Date;
 
 /**
  * oss 实现方法抽象类
@@ -150,4 +151,27 @@ public interface IOSS {
      * @return 复制操作结果
      */
     CopyObjectResult copyFile2Bucket(String fromKey, IOSS targetBucket, String toKey, ObjectMetadata targetFileObjectMetadata);
+
+    /**
+     * 删除文件对象
+     * @param finalKey oss路径
+     * @return true 删除成功
+     */
+    boolean delFile(String finalKey);
+
+    /**
+     * 获取文件下载地址
+     * @param finalKey 文件oss路径
+     * @param expiration 过期时间(单位：分钟)
+     * @return 下载地址
+     */
+    String getDownloadExpUrl(String finalKey, int expiration);
+
+    /**
+     * 获取文件下载地址
+     * @param finalKey 文件oss路径
+     * @param expiration 到期时间
+     * @return 下载地址
+     */
+    String getDownloadExpUrl(String finalKey, Date expiration);
 }

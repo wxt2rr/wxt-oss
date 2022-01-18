@@ -8,93 +8,232 @@ import com.wangxt.oss.core.pojo.PutObjectResult;
 import com.wangxt.oss.core.service.IOSS;
 
 import java.io.InputStream;
+import java.util.Date;
 
 /**
  * minio 实现类
  */
 public class Minio implements IOSS {
 
+    /**
+     * 获取配置参数类
+     */
     @Override
     public IOSSConfig getOssConfig() {
         return null;
     }
 
     public Minio(IOSSConfig config){
-        
+
     }
 
+    /**
+     * 上传文件方法
+     *
+     * @param finalKey oss文件路径
+     * @param is       文件流
+     * @return PutObjectResult
+     */
     @Override
     public PutObjectResult putFile(String finalKey, InputStream is) {
         return null;
     }
 
+    /**
+     * 上传文件方法
+     *
+     * @param finalKey    oss文件路径
+     * @param is          文件流
+     * @param contentType 文件类型  eg:image/png
+     * @return PutObjectResult
+     */
     @Override
     public PutObjectResult putFile(String finalKey, InputStream is, String contentType) {
         return null;
     }
 
+    /**
+     * 上传文件方法
+     *
+     * @param finalKey oss文件路径
+     * @param byts     文件字节数组
+     * @return PutObjectResult
+     */
     @Override
     public PutObjectResult putFile(String finalKey, byte[] byts) {
         return null;
     }
 
+    /**
+     * 上传文件方法
+     *
+     * @param finalKey    oss文件路径
+     * @param byts        文件字节数组
+     * @param contentType 文件类型  eg:image/png
+     * @return PutObjectResult
+     */
     @Override
     public PutObjectResult putFile(String finalKey, byte[] byts, String contentType) {
         return null;
     }
 
+    /**
+     * 上传文件方法
+     *
+     * @param finalKey oss文件路径
+     * @param is       文件流
+     * @param meta     存储对象元数据
+     * @return PutObjectResult
+     */
     @Override
     public PutObjectResult putFile(String finalKey, InputStream is, ObjectMetadata meta) {
         return null;
     }
 
+    /**
+     * 上传文件方法
+     *
+     * @param finalKey oss文件路径
+     * @param byts     文件字节数组
+     * @param meta     存储对象元数据
+     * @return PutObjectResult
+     */
     @Override
     public PutObjectResult putFile(String finalKey, byte[] byts, ObjectMetadata meta) {
         return null;
     }
 
+    /**
+     * 获取文件
+     * @param finalKey oss文件路径
+     * @return 文件对象
+     */
     @Override
     public OSSObject getFile(String finalKey) {
         return null;
     }
 
+    /**
+     * 获取文件
+     * @param finalKey oss文件路径
+     * @param rangeFrom 文件流起始位置
+     * @param rangeTo 文件流终止位置
+     * @return 文件对象
+     */
     @Override
     public OSSObject getFile(String finalKey, long rangeFrom, long rangeTo) {
         return null;
     }
 
+    /**
+     * 获取文件
+     * @param finalKey oss文件路径
+     * @param style 文件格式
+     * @return 文件对象
+     */
     @Override
     public OSSObject getFile(String finalKey, String style) {
         return null;
     }
 
+    /**
+     * 获取文件元数据
+     * @param finalKey oss文件路径
+     * @return 文件对象元数据
+     */
     @Override
     public ObjectMetadata getObjectMetadata(String finalKey) {
         return null;
     }
 
+    /**
+     * 复制文件
+     * @param fromKey 源文件路径
+     * @param toKey 目标文件路径
+     * @return 复制操作结果
+     */
     @Override
     public CopyObjectResult copyFile(String fromKey, String toKey) {
         return null;
     }
 
+    /**
+     * 复制文件
+     * @param fromKey 源文件路径
+     * @param toKey 目标文件路径
+     * @return 复制操作结果
+     */
     @Override
     public CopyObjectResult copyFileNoCatch(String fromKey, String toKey) throws Exception {
         return null;
     }
 
+    /**
+     * 复制文件到其它桶
+     * @param fromKey 源文件路径
+     * @param targetBucket 目标桶名称
+     * @param toKey 目标文件路径
+     * @return 复制操作结果
+     */
     @Override
     public CopyObjectResult copyFile2Bucket(String fromKey, IOSS targetBucket, String toKey) {
         return null;
     }
 
+    /**
+     * 复制文件并指定目标文件元数据信息
+     * @param fromKey 源文件路径
+     * @param toKey 目标文件路径
+     * @param targetFileObjectMetadata 目标文件元数据信息
+     * @return 复制操作结果
+     */
     @Override
     public CopyObjectResult copyFile(String fromKey, String toKey, ObjectMetadata targetFileObjectMetadata) {
         return null;
     }
 
+    /**
+     * 复制文件到其它桶，并指定目标文件元数据信息
+     * @param fromKey 源文件路径
+     * @param targetBucket 目标桶名称
+     * @param toKey 目标文件路径
+     * @param targetFileObjectMetadata 目标文件元数据信息
+     * @return 复制操作结果
+     */
     @Override
     public CopyObjectResult copyFile2Bucket(String fromKey, IOSS targetBucket, String toKey, ObjectMetadata targetFileObjectMetadata) {
+        return null;
+    }
+
+    /**
+     * 删除文件对象
+     * @param finalKey oss路径
+     * @return true 删除成功
+     */
+    @Override
+    public boolean delFile(String finalKey) {
+        return false;
+    }
+
+    /**
+     * 获取文件下载地址
+     * @param finalKey 文件oss路径
+     * @param expiration 过期时间(单位：分钟)
+     * @return 下载地址
+     */
+    @Override
+    public String getDownloadExpUrl(String finalKey, int expiration) {
+        return null;
+    }
+
+    /**
+     * 获取文件下载地址
+     * @param finalKey 文件oss路径
+     * @param expiration 到期时间
+     * @return 下载地址
+     */
+    @Override
+    public String getDownloadExpUrl(String finalKey, Date expiration) {
         return null;
     }
 }
