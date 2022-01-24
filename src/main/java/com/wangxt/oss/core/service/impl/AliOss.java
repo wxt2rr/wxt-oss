@@ -1,27 +1,39 @@
 package com.wangxt.oss.core.service.impl;
 
+import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.PutObjectRequest;
 import com.wangxt.oss.core.config.IOSSConfig;
 import com.wangxt.oss.core.pojo.CopyObjectResult;
 import com.wangxt.oss.core.pojo.OSSObject;
 import com.wangxt.oss.core.pojo.ObjectMetadata;
 import com.wangxt.oss.core.pojo.PutObjectResult;
 import com.wangxt.oss.core.service.IOSS;
+import org.apache.commons.lang3.StringUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Objects;
 
 public class AliOss implements IOSS {
+
+    private OSSClient ossClient;
+
+    private final IOSSConfig ossConfig;
 
     /**
      * 获取配置参数类
      */
     @Override
     public IOSSConfig getOssConfig() {
-        return null;
+        return this.ossConfig;
     }
 
     public AliOss(IOSSConfig config){
-
+        this.ossConfig = config;
+        if(Objects.nonNull(config)){
+            ossClient = new OSSClient(config.getEndpoint().getHost(), config.getAccessId(), config.getAccessKey());
+        }
     }
 
     /**
@@ -33,6 +45,14 @@ public class AliOss implements IOSS {
      */
     @Override
     public PutObjectResult putFile(String finalKey, InputStream is) {
+        PutObjectRequest request = new PutObjectRequest(ossConfig.getBucketName(), finalKey, is, null);
+
+        try {
+            com.aliyun.oss.model.PutObjectResult putObjectResult = ossClient.putObject(request);
+            return new PutObjectResult(putObjectResult.getETag());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -46,6 +66,16 @@ public class AliOss implements IOSS {
      */
     @Override
     public PutObjectResult putFile(String finalKey, InputStream is, String contentType) {
+        com.aliyun.oss.model.ObjectMetadata objectMetadata = new com.aliyun.oss.model.ObjectMetadata();
+        objectMetadata.setContentType(contentType);
+        PutObjectRequest request = new PutObjectRequest(ossConfig.getBucketName(), finalKey, is, objectMetadata);
+
+        try {
+            com.aliyun.oss.model.PutObjectResult putObjectResult = ossClient.putObject(request);
+            return new PutObjectResult(putObjectResult.getETag());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -58,7 +88,7 @@ public class AliOss implements IOSS {
      */
     @Override
     public PutObjectResult putFile(String finalKey, byte[] byts) {
-        return null;
+        return putFile(finalKey, byts, StringUtils.EMPTY);
     }
 
     /**
@@ -71,7 +101,9 @@ public class AliOss implements IOSS {
      */
     @Override
     public PutObjectResult putFile(String finalKey, byte[] byts, String contentType) {
-        return null;
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(contentType);
+        return putFile(finalKey, new ByteArrayInputStream(byts), metadata);
     }
 
     /**
