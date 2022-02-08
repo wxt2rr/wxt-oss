@@ -1,7 +1,10 @@
 package com.wangxt.oss.core.service.impl;
 
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.GetObjectRequest;
 import com.aliyun.oss.model.PutObjectRequest;
+import com.fasterxml.jackson.databind.BeanProperty;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.wangxt.oss.core.config.IOSSConfig;
 import com.wangxt.oss.core.pojo.CopyObjectResult;
 import com.wangxt.oss.core.pojo.OSSObject;
@@ -12,7 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class AliOss implements IOSS {
@@ -116,20 +121,20 @@ public class AliOss implements IOSS {
      */
     @Override
     public PutObjectResult putFile(String finalKey, InputStream is, ObjectMetadata meta) {
-        return null;
+        return putFile(finalKey, is, meta);
     }
 
     /**
      * 上传文件方法
      *
      * @param finalKey oss文件路径
-     * @param byts     文件字节数组
+     * @param bytes     文件字节数组
      * @param meta     存储对象元数据
      * @return PutObjectResult
      */
     @Override
-    public PutObjectResult putFile(String finalKey, byte[] byts, ObjectMetadata meta) {
-        return null;
+    public PutObjectResult putFile(String finalKey, byte[] bytes, ObjectMetadata meta) {
+        return putFile(finalKey, new ByteArrayInputStream(bytes), meta);
     }
 
     /**
@@ -139,7 +144,7 @@ public class AliOss implements IOSS {
      */
     @Override
     public OSSObject getFile(String finalKey) {
-        return null;
+        return getFile(finalKey, 0 ,0);
     }
 
     /**
@@ -151,6 +156,16 @@ public class AliOss implements IOSS {
      */
     @Override
     public OSSObject getFile(String finalKey, long rangeFrom, long rangeTo) {
+        GetObjectRequest request = new GetObjectRequest(ossConfig.getBucketName(), finalKey);
+        if(rangeFrom > 0 && rangeTo > 0){
+            request.setRange(rangeFrom, rangeTo);
+        }
+
+        com.aliyun.oss.model.OSSObject object = ossClient.getObject(request);
+        if(Objects.nonNull(object)){
+            return new OSSObject(object.getObjectContent());
+        }
+
         return null;
     }
 
@@ -162,6 +177,15 @@ public class AliOss implements IOSS {
      */
     @Override
     public OSSObject getFile(String finalKey, String style) {
+        GetObjectRequest request = new GetObjectRequest(ossConfig.getBucketName(), finalKey);
+        if(StringUtils.isNotBlank(style)){
+            request.setProcess(style);
+        }
+
+        com.aliyun.oss.model.OSSObject object = ossClient.getObject(request);
+        if(Objects.nonNull(object)){
+            return new OSSObject(object.getObjectContent());
+        }
         return null;
     }
 
@@ -172,7 +196,8 @@ public class AliOss implements IOSS {
      */
     @Override
     public ObjectMetadata getObjectMetadata(String finalKey) {
-        return null;
+        com.aliyun.oss.model.ObjectMetadata objectMetadata = ossClient.getObjectMetadata(ossConfig.getBucketName(), finalKey);
+        return new ObjectMetadata(objectMetadata.getETag(), objectMetadata.getContentLength(), LocalDateTime.now(), objectMetadata.getContentType(), objectMetadata.getUserMetadata(), new HashMap<>());
     }
 
     /**
