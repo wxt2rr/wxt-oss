@@ -1,10 +1,10 @@
 package com.wangxt.oss.core.service.impl;
 
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.CopyObjectRequest;
 import com.aliyun.oss.model.GetObjectRequest;
 import com.aliyun.oss.model.PutObjectRequest;
-import com.fasterxml.jackson.databind.BeanProperty;
-import com.fasterxml.jackson.databind.util.BeanUtil;
+import com.aliyun.oss.model.VoidResult;
 import com.wangxt.oss.core.config.IOSSConfig;
 import com.wangxt.oss.core.pojo.CopyObjectResult;
 import com.wangxt.oss.core.pojo.OSSObject;
@@ -15,11 +15,17 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * @author wangxt
+ * @description 阿里云的OSS
+ * @date 2022/3/2 10:01
+ **/
 public class AliOss implements IOSS {
 
     private OSSClient ossClient;
@@ -208,7 +214,7 @@ public class AliOss implements IOSS {
      */
     @Override
     public CopyObjectResult copyFile(String fromKey, String toKey) {
-        return null;
+        return copyFile(fromKey, toKey, new ObjectMetadata());
     }
 
     /**
@@ -219,7 +225,7 @@ public class AliOss implements IOSS {
      */
     @Override
     public CopyObjectResult copyFileNoCatch(String fromKey, String toKey) throws Exception {
-        return null;
+        return copyFile(fromKey, toKey);
     }
 
     /**
@@ -231,7 +237,7 @@ public class AliOss implements IOSS {
      */
     @Override
     public CopyObjectResult copyFile2Bucket(String fromKey, IOSS targetBucket, String toKey) {
-        return null;
+        return copyFile2Bucket(fromKey, targetBucket, toKey);
     }
 
     /**
@@ -243,7 +249,16 @@ public class AliOss implements IOSS {
      */
     @Override
     public CopyObjectResult copyFile(String fromKey, String toKey, ObjectMetadata targetFileObjectMetadata) {
-        return null;
+        CopyObjectRequest request = new CopyObjectRequest(ossConfig.getBucketName(), fromKey, ossConfig.getBucketName(), toKey);
+
+        com.aliyun.oss.model.ObjectMetadata objectMetadata = new com.aliyun.oss.model.ObjectMetadata();
+        objectMetadata.setContentType(targetFileObjectMetadata.getContentType());
+        objectMetadata.setContentLength(targetFileObjectMetadata.getSize());
+        objectMetadata.setContentMD5(targetFileObjectMetadata.getETag());
+        request.setNewObjectMetadata(objectMetadata);
+
+        com.aliyun.oss.model.CopyObjectResult copyObjectResult = ossClient.copyObject(request);
+        return new CopyObjectResult(copyObjectResult.getETag());
     }
 
     /**
@@ -256,7 +271,16 @@ public class AliOss implements IOSS {
      */
     @Override
     public CopyObjectResult copyFile2Bucket(String fromKey, IOSS targetBucket, String toKey, ObjectMetadata targetFileObjectMetadata) {
-        return null;
+        CopyObjectRequest request = new CopyObjectRequest(ossConfig.getBucketName(), fromKey, targetBucket.getOssConfig().getBucketName(), toKey);
+
+        com.aliyun.oss.model.ObjectMetadata objectMetadata = new com.aliyun.oss.model.ObjectMetadata();
+        objectMetadata.setContentType(targetFileObjectMetadata.getContentType());
+        objectMetadata.setContentLength(targetFileObjectMetadata.getSize());
+        objectMetadata.setContentMD5(targetFileObjectMetadata.getETag());
+        request.setNewObjectMetadata(objectMetadata);
+
+        com.aliyun.oss.model.CopyObjectResult copyObjectResult = ossClient.copyObject(request);
+        return new CopyObjectResult(copyObjectResult.getETag());
     }
 
     /**
@@ -266,7 +290,8 @@ public class AliOss implements IOSS {
      */
     @Override
     public boolean delFile(String finalKey) {
-        return false;
+        VoidResult voidResult = ossClient.deleteObject(ossConfig.getBucketName(), finalKey);
+        return true;
     }
 
     /**
@@ -277,7 +302,7 @@ public class AliOss implements IOSS {
      */
     @Override
     public String getDownloadExpUrl(String finalKey, int expiration) {
-        return null;
+        return getDownloadExpUrl(finalKey, new Date(System.currentTimeMillis() + expiration * 60 * 1000L));
     }
 
     /**
@@ -288,6 +313,7 @@ public class AliOss implements IOSS {
      */
     @Override
     public String getDownloadExpUrl(String finalKey, Date expiration) {
-        return null;
+        URL url = ossClient.generatePresignedUrl(ossConfig.getBucketName(), finalKey, expiration);
+        return url.getPath();
     }
 }
