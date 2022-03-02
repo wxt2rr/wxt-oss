@@ -4,3 +4,4 @@
 # 目前支持的对象存储服务
 * ali oss
 * minio
+* tx cos
