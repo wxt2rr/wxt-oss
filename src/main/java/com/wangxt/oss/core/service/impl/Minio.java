@@ -9,6 +9,7 @@ import com.wangxt.oss.core.pojo.ObjectMetadata;
 import com.wangxt.oss.core.pojo.PutObjectResult;
 import com.wangxt.oss.core.service.IOSS;
 import io.minio.*;
+import io.minio.http.Method;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
@@ -397,6 +398,14 @@ public class Minio implements IOSS {
      */
     @Override
     public String getDownloadExpUrl(String finalKey, int expiration) {
+        GetPresignedObjectUrlArgs args = GetPresignedObjectUrlArgs.builder().bucket(ossConfig.getBucketName()).object(finalKey).method(Method.GET).expiry(expiration).build();
+
+        try {
+            return minioClient.getPresignedObjectUrl(args);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
@@ -408,6 +417,6 @@ public class Minio implements IOSS {
      */
     @Override
     public String getDownloadExpUrl(String finalKey, Date expiration) {
-        return null;
+        return getDownloadExpUrl(finalKey, (int)((expiration.getTime() - System.currentTimeMillis()) / 1000 / 60));
     }
 }
