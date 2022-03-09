@@ -1,5 +1,7 @@
 package com.wangxt.oss.core.config;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +15,8 @@ import java.net.URL;
  **/
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class IOSSConfig {
     /**
      * accessId
