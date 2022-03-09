@@ -47,7 +47,9 @@ public class Minio implements IOSS {
     public Minio(IOSSConfig ossConfig){
         this.ossConfig = ossConfig;
         try {
-            minioClient = MinioClient.builder().endpoint(ossConfig.getEndpoint()).
+            String host = ossConfig.getEndpoint().getHost();
+            int port = ossConfig.getEndpoint().getPort();
+            minioClient = MinioClient.builder().endpoint(host, port, Boolean.FALSE).
                     credentials(ossConfig.getAccessId(), ossConfig.getAccessKey()).build();
         } catch (Exception e) {
             e.printStackTrace();
