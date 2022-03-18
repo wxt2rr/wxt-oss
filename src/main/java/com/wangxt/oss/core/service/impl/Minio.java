@@ -3,22 +3,18 @@ package com.wangxt.oss.core.service.impl;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.wangxt.oss.core.config.IOSSConfig;
-import com.wangxt.oss.core.pojo.CopyObjectResult;
-import com.wangxt.oss.core.pojo.OSSObject;
-import com.wangxt.oss.core.pojo.ObjectMetadata;
-import com.wangxt.oss.core.pojo.PutObjectResult;
+import com.wangxt.oss.core.pojo.*;
 import com.wangxt.oss.core.service.IOSS;
 import io.minio.*;
 import io.minio.http.Method;
+import io.minio.messages.Item;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.net.URL;
+import java.util.*;
 
 /**
  * minio 实现类
@@ -420,5 +416,42 @@ public class Minio implements IOSS {
     @Override
     public String getDownloadExpUrl(String finalKey, Date expiration) {
         return getDownloadExpUrl(finalKey, (int)((expiration.getTime() - System.currentTimeMillis()) / 1000 / 60));
+    }
+
+    /**
+     * 获取文件展示地址
+     * @param finalKey 文件路径
+     * @return 展示地址
+     */
+    @Override
+    public String getPathUrl(String finalKey) {
+        URL endpoint = IOSSConfig.OSSUrlDomainType.OSS.getEndpoint(ossConfig);
+        return String.format("%s/%s/%s", endpoint.toString(), ossConfig.getBucketName(), finalKey);
+    }
+
+    /**
+     * 获取指定前缀的文件列表
+     * @param bTypeName 桶路径
+     * @param prefix 前缀
+     * @return 文件列表
+     */
+    @Override
+    public List<OSSObjectSummary> listObjects(String bTypeName, String prefix) {
+        if (StringUtils.isBlank(prefix)) {
+            return null;
+        }
+
+        List<OSSObjectSummary> result = new ArrayList<>();
+        try {
+            Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder().bucket(ossConfig.getBucketName()).prefix(String.format("%s/%s", bTypeName, prefix)).build());
+            for (Result<Item> itemResult : results) {
+                Item item = itemResult.get();
+                result.add(new OSSObjectSummary(item.objectName(), item.etag(), item.size(), item.lastModified().toLocalDateTime()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 }

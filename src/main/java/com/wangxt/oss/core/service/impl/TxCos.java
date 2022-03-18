@@ -1,14 +1,12 @@
 package com.wangxt.oss.core.service.impl;
 
 import com.wangxt.oss.core.config.IOSSConfig;
-import com.wangxt.oss.core.pojo.CopyObjectResult;
-import com.wangxt.oss.core.pojo.OSSObject;
-import com.wangxt.oss.core.pojo.ObjectMetadata;
-import com.wangxt.oss.core.pojo.PutObjectResult;
+import com.wangxt.oss.core.pojo.*;
 import com.wangxt.oss.core.service.IOSS;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author wangxt
@@ -109,6 +107,16 @@ public class TxCos implements IOSS {
 
     @Override
     public String getDownloadExpUrl(String finalKey, Date expiration) {
+        return null;
+    }
+
+    @Override
+    public String getPathUrl(String finalKey) {
+        return null;
+    }
+
+    @Override
+    public List<OSSObjectSummary> listObjects(String bTypeName, String prefix) {
         return null;
     }
 }

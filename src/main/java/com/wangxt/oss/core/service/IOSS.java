@@ -1,13 +1,11 @@
 package com.wangxt.oss.core.service;
 
 import com.wangxt.oss.core.config.IOSSConfig;
-import com.wangxt.oss.core.pojo.CopyObjectResult;
-import com.wangxt.oss.core.pojo.OSSObject;
-import com.wangxt.oss.core.pojo.ObjectMetadata;
-import com.wangxt.oss.core.pojo.PutObjectResult;
+import com.wangxt.oss.core.pojo.*;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 
 /**
  * oss 实现方法抽象类
@@ -174,4 +172,19 @@ public interface IOSS {
      * @return 下载地址
      */
     String getDownloadExpUrl(String finalKey, Date expiration);
+
+    /**
+     * 获取文件展示地址
+     * @param finalKey 文件路径
+     * @return 展示地址
+     */
+    String getPathUrl(String finalKey);
+
+    /**
+     * 获取指定前缀的文件列表
+     * @param bTypeName 桶路径
+     * @param prefix 前缀
+     * @return 文件列表
+     */
+    List<OSSObjectSummary> listObjects(String bTypeName, String prefix);
 }

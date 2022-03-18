@@ -1,13 +1,13 @@
 package com.wangxt.oss.core.service.impl;
 
 import com.aliyun.oss.OSSClient;
-import com.aliyun.oss.model.CopyObjectRequest;
-import com.aliyun.oss.model.GetObjectRequest;
-import com.aliyun.oss.model.PutObjectRequest;
-import com.aliyun.oss.model.VoidResult;
+import com.aliyun.oss.model.*;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.wangxt.oss.core.config.IOSSConfig;
+import com.wangxt.oss.core.pojo.*;
 import com.wangxt.oss.core.pojo.CopyObjectResult;
 import com.wangxt.oss.core.pojo.OSSObject;
+import com.wangxt.oss.core.pojo.OSSObjectSummary;
 import com.wangxt.oss.core.pojo.ObjectMetadata;
 import com.wangxt.oss.core.pojo.PutObjectResult;
 import com.wangxt.oss.core.service.IOSS;
@@ -17,9 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author wangxt
@@ -315,5 +313,47 @@ public class AliOss implements IOSS {
     public String getDownloadExpUrl(String finalKey, Date expiration) {
         URL url = ossClient.generatePresignedUrl(ossConfig.getBucketName(), finalKey, expiration);
         return url.getPath();
+    }
+
+    /**
+     * 获取文件展示地址
+     * @param finalKey 文件路径
+     * @return 展示地址
+     */
+    @Override
+    public String getPathUrl(String finalKey) {
+        return String.format("//%s/%s", this.getOssConfig().getCdnEndpoint().getHost(), finalKey);
+    }
+
+    /**
+     * 获取指定前缀的文件列表
+     * @param bTypeName 桶路径
+     * @param prefix 前缀
+     * @return 文件列表
+     */
+    @Override
+    public List<OSSObjectSummary> listObjects(String bTypeName, String prefix) {
+        String endPrefix = bTypeName + "/" + prefix;
+        String nextMarker = null;
+        ObjectListing objectListing;
+        ListObjectsRequest lsObjReq = new ListObjectsRequest(this.ossConfig.getBucketName());
+        lsObjReq.setPrefix(endPrefix);
+        List<OSSObjectSummary> lsSums = new ArrayList<>();
+
+        do {
+            objectListing = this.ossClient.listObjects(lsObjReq.withMarker(nextMarker).withMaxKeys(30));
+            nextMarker = objectListing.getNextMarker();
+            List<com.aliyun.oss.model.OSSObjectSummary> objectSummaries = objectListing.getObjectSummaries();
+            for (com.aliyun.oss.model.OSSObjectSummary ossObjectSummary : objectSummaries) {
+                OSSObjectSummary summary = new OSSObjectSummary();
+                summary.setETag(ossObjectSummary.getETag());
+                summary.setSize(ossObjectSummary.getSize());
+                summary.setLastModified(LocalDateTime.now());
+                summary.setFileKey(ossObjectSummary.getKey());
+                lsSums.add(summary);
+            }
+        } while (objectListing.isTruncated());
+
+        return lsSums;
     }
 }
